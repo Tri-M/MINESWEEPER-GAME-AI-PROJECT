@@ -24,7 +24,6 @@ class Minesweeper():
             if not self.board[i][j]:
                 self.mines.add((i, j))
                 self.board[i][j] = True
-
         self.minesFound = set()
 
     def print(self):
@@ -57,45 +56,37 @@ class Minesweeper():
         return self.minesFound == self.mines
 
 class Sentence():
-
     def __init__(self, cells, count):
         self.cells = set(cells)
         self.count = count
-
     def __eq__(self, other):
         return self.cells == other.cells and self.count == other.count
-
     def __str__(self):
         return f"{self.cells} = {self.count}"
+    
+    
+    def knownSelfSet(self): 
+        knownSafeSet = set()
+        if self.count == 0:
+            for cell in self.cells: 
+                knownSafeSet.add(cell)
+            for cell in knownSafeSet:
+                self.markSafe(cell)
+        return knownSafeSet
 
     def knownMinesFunc(self):
         knownMinesSet = set()
         if len(self.cells) == self.count: 
             for cell in self.cells: 
                 knownMinesSet.add(cell)
-
             for cell in knownMinesSet:
                 self.markMine(cell)
-
         return knownMinesSet
-
-    def knownSelfSet(self): 
-        knownSafeSet = set()
-
-        if self.count == 0:
-            for cell in self.cells: 
-                knownSafeSet.add(cell)
-            
-            for cell in knownSafeSet:
-                self.markSafe(cell)
-
-        return knownSafeSet
 
     def markMine(self, cell):
         if (cell) in self.cells:
             self.cells.remove(cell)
             self.count -= 1
-
     def markSafe(self, cell):
         if (cell) in self.cells:
             self.cells.remove(cell)
@@ -141,7 +132,6 @@ class MinesweeperAI():
         self.knowledge.append(new_sentence)
         self.safes.update(new_sentence.knownSelfSet())
         self.mines.update(new_sentence.knownMinesFunc())
-
         self.updateKB()
 
         for sentence in self.knowledge:
@@ -154,9 +144,7 @@ class MinesweeperAI():
                         if sentence1.cells.issubset(sentence.cells):
                             new_set_cells = sentence.cells - sentence1.cells
                             new_set_count = sentence.count - sentence1.count
-
                         new_subset_sentence = Sentence(new_set_cells, new_set_count)
-                    
                         if new_subset_sentence in self.knowledge: 
                             continue
                         self.knowledge.append(new_subset_sentence)

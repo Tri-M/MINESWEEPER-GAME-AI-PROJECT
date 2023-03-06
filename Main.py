@@ -22,9 +22,9 @@ screen = pygame.display.set_mode(size)
 
 
 OPEN_SANS = "OpenSans-Regular.ttf"
-smallFont = pygame.font.Font(OPEN_SANS, 28)
-mediumFont = pygame.font.Font(OPEN_SANS, 32)
-largeFont = pygame.font.Font(OPEN_SANS, 40)
+small = pygame.font.Font(OPEN_SANS, 28)
+medium = pygame.font.Font(OPEN_SANS, 32)
+large = pygame.font.Font(OPEN_SANS, 40)
 
 
 BOARD_PADDING = 20
@@ -49,7 +49,7 @@ flags = set()
 lost = False
 
 
-instructions = True
+ins = True
 
 while True:
     for event in pygame.event.get():
@@ -57,8 +57,8 @@ while True:
             sys.exit()
     screen.fill(BOARDBG)
 
-    if instructions:
-        title = largeFont.render("Play Minesweeper", True, BOARDBG)
+    if ins:
+        title = large.render("Play Minesweeper", True, BOARDBG)
         titleRect = title.get_rect()
         titleRect.center = ((width / 2), 50)
         screen.blit(title, titleRect)
@@ -75,34 +75,34 @@ while True:
         ]
 
         for i, rule in enumerate(rules):
-            line = smallFont.render(rule, True, BLACK)
+            line = small.render(rule, True, BLACK)
             lineRect = line.get_rect()
             lineRect.center = ((width / 2), 150 + 30 * i)
             screen.blit(line, lineRect)
 
         
-        playButton = pygame.Rect((width / 4), (3 / 4) * height, width / 2, 50)
-        buttonText = mediumFont.render("Play Game", True, BLUE)
-        buttonTextRect = buttonText.get_rect()
-        buttonTextRect.center = playButton.center
-        pygame.draw.rect(screen, BOARDBG, playButton)
+        playBtn = pygame.Rect((width / 4), (3.2 / 4) * height, width / 2, 50)
+        btnText = medium.render("Play Game", True, BLUE)
+        btnTextRect = btnText.get_rect()
+        btnTextRect.center = playBtn.center
+        pygame.draw.rect(screen, BOARDBG, playBtn)
         for i in range(4):
-          pygame.draw.rect(screen, BLACK, (playButton.left-i,playButton.top-i,playButton.width,playButton.height), 1)
-        screen.blit(buttonText, buttonTextRect)
+          pygame.draw.rect(screen, BLACK, (playBtn.left-i,playBtn.top-i,playBtn.width,playBtn.height), 1)
+        screen.blit(btnText, btnTextRect)
         
         
-        if playButton.collidepoint(pygame.mouse.get_pos()):
-          buttonText = mediumFont.render("Play Game", True, BOARDBG)
-          buttonTextRect = buttonText.get_rect()
-          buttonTextRect.center = playButton.center
-          pygame.draw.rect(screen, DARK_GRAY, playButton)
-          screen.blit(buttonText, buttonTextRect)
+        if playBtn.collidepoint(pygame.mouse.get_pos()):
+          btnText = medium.render("Play Game", True, BOARDBG)
+          btnTextRect = btnText.get_rect()
+          btnTextRect.center = playBtn.center
+          pygame.draw.rect(screen, BLACK, playBtn)
+          screen.blit(btnText, btnTextRect)
         
         click, _, _ = pygame.mouse.get_pressed()
         if click == 1:
             mouse = pygame.mouse.get_pos()
-            if playButton.collidepoint(mouse):
-                instructions = False
+            if playBtn.collidepoint(mouse):
+                ins = False
                 time.sleep(0.3)
 
         pygame.display.flip()
@@ -119,7 +119,7 @@ while True:
                 cell_size, cell_size
             )
             pygame.draw.rect(screen, BOARDBG, rect)
-            pygame.draw.rect(screen, BLACK, rect, 3)
+            pygame.draw.rect(screen, BLUE, rect, 3)
             
             
             if (i,j) in ai.mines:
@@ -129,45 +129,45 @@ while True:
             elif (i, j) in flags:
                 screen.blit(flag, rect)
             elif (i, j) in revealed:
-                neighbors = smallFont.render(
+                neighbors = small.render(
                     str(game.nearbyMines((i, j))),
                     True, BLACK
                 )
-                neighborsTextRect = neighbors.get_rect()
-                neighborsTextRect.center = rect.center
-                screen.blit(neighbors, neighborsTextRect)
+                neighTextRect = neighbors.get_rect()
+                neighTextRect.center = rect.center
+                screen.blit(neighbors, neighTextRect)
 
             row.append(rect)
         cells.append(row)
 
-    aiButton = pygame.Rect(
+    aiBtn = pygame.Rect(
         (2 / 3) * width + BOARD_PADDING, (1 / 3) * height - 50,
         (width / 3) - BOARD_PADDING * 2, 50
     )
-    buttonText = mediumFont.render("Let AI Play", True, BLUE)
-    buttonRect = buttonText.get_rect()
-    buttonRect.center = aiButton.center
-    pygame.draw.rect(screen, BOARDBG, aiButton)
+    btnText = medium.render("Let AI Play", True, BLUE)
+    btnRect = btnText.get_rect()
+    btnRect.center = aiBtn.center
+    pygame.draw.rect(screen, BOARDBG, aiBtn)
     for i in range(4):
-          pygame.draw.rect(screen, BLACK, (aiButton.left-i,aiButton.top-i,aiButton.width,aiButton.height), 1)
-    screen.blit(buttonText, buttonRect)
+          pygame.draw.rect(screen, BLACK, (aiBtn.left-i,aiBtn.top-i,aiBtn.width,aiBtn.height), 1)
+    screen.blit(btnText, btnRect)
 
 
     resetButton = pygame.Rect(
         (2 / 3) * width + BOARD_PADDING, (1 / 3) * height + 20,
         (width / 3) - BOARD_PADDING * 2, 50
     )
-    buttonText = mediumFont.render("Reset Game", True, BLUE)
-    buttonRect = buttonText.get_rect()
-    buttonRect.center = resetButton.center
+    btnText = medium.render("Reset Game", True, BLUE)
+    btnRect = btnText.get_rect()
+    btnRect.center = resetButton.center
     pygame.draw.rect(screen, BOARDBG, resetButton)
     for i in range(4):
           pygame.draw.rect(screen, BLACK, (resetButton.left-i,resetButton.top-i,resetButton.width,resetButton.height), 1)
-    screen.blit(buttonText, buttonRect)
+    screen.blit(btnText, btnRect)
 
     
     text = "Lost" if lost else "Won" if game.mines == flags else ""
-    text = mediumFont.render(text, True, BLACK)
+    text = medium.render(text, True, BLACK)
     textRect = text.get_rect()
     textRect.center = ((5 / 6) * width, (2 / 3) * height)
     screen.blit(text, textRect)
@@ -176,17 +176,17 @@ while True:
     
     
     if resetButton.collidepoint(pygame.mouse.get_pos()):
-      buttonText = mediumFont.render("Reset", True, BOARDBG)
-      buttonRect = buttonText.get_rect()
-      buttonRect.center = resetButton.center
-      pygame.draw.rect(screen, DARK_GRAY, resetButton)
-      screen.blit(buttonText, buttonRect)
-    if aiButton.collidepoint(pygame.mouse.get_pos()):
-      buttonText = mediumFont.render("AI Move", True, BOARDBG)
-      buttonRect = buttonText.get_rect()
-      buttonRect.center = aiButton.center
-      pygame.draw.rect(screen, DARK_GRAY, aiButton)
-      screen.blit(buttonText, buttonRect)
+      btnText = medium.render("Reset", True, BOARDBG)
+      btnRect = btnText.get_rect()
+      btnRect.center = resetButton.center
+      pygame.draw.rect(screen,BLACK, resetButton)
+      screen.blit(btnText, btnRect)
+    if aiBtn.collidepoint(pygame.mouse.get_pos()):
+      btnText = medium.render("AI Move", True, BOARDBG)
+      btnRect = btnText.get_rect()
+      btnRect.center = aiBtn.center
+      pygame.draw.rect(screen,BLACK,aiBtn)
+      screen.blit(btnText, btnRect)
     left, _, right = pygame.mouse.get_pressed()
 
     
@@ -205,10 +205,10 @@ while True:
         mouse = pygame.mouse.get_pos()
 
     
-        if aiButton.collidepoint(mouse) and not lost:
-            move = ai.make_safe_move()
+        if aiBtn.collidepoint(mouse) and not lost:
+            move = ai.moveSafe()
             if move is None:
-                move = ai.make_random_move()
+                move = ai.moveRandomly()
                 if move is None:
                     flags = ai.mines.copy()
                     print("No moves left to make.")
